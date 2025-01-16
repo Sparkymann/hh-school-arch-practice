@@ -11,11 +11,11 @@ import ru.ilya.model.Package;
 @Service
 public class PackageService {
   private final PackageDao packageDao;
-  private final RestClient userServiceClient;
+  private final RestClient.Builder clientBuilder;
 
-  public PackageService(PackageDao packageDao) {
+  public PackageService(PackageDao packageDao, RestClient.Builder clientBuilder) {
     this.packageDao = packageDao;
-    this.userServiceClient = RestClient.builder().baseUrl("http://localhost:8080/user").build();
+    this.clientBuilder = clientBuilder;
   }
 
   public Long send(PackageDto packageDto) {
@@ -36,6 +36,7 @@ public class PackageService {
 
   private List<String> getUndefinedUsers(String... names) {
     ArrayList<String> undefinedUsers = new ArrayList<>();
+    RestClient userServiceClient = clientBuilder.baseUrl("http://user-service/user").build();
     for (String name : names) {
       Boolean exists = userServiceClient.get().uri("/exists/{name}", name).retrieve().body(Boolean.class);
       if (Boolean.FALSE.equals(exists)) {

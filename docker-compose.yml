@@ -1,0 +1,27 @@
+services:
+  user-service:
+    depends_on:
+      - consul
+    environment:
+      INSTANCE_ID: user-service-1
+    build:
+      context: .
+      args:
+        JAR_PATH: user-service/target
+    ports:
+      - "8081:8080"
+  package-service:
+    depends_on:
+      - consul
+    environment:
+      INSTANCE_ID: package-service-1
+    build:
+      context: .
+      args:
+        JAR_PATH: package-service/target
+    ports:
+      - "8080:8080"
+  consul:
+    image: bitnami/consul
+    ports:
+      - "8500:8500"
