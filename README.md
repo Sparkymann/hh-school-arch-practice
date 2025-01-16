@@ -29,13 +29,13 @@ curl localhost:8081/user/1
 
 ### Отправить посылку
 ```shell
-curl -X POST localhost:8080/package -H 'Content-Type: application/json' -d '{"sender": "Ilya", "receiver": "Ilya"}'
+curl -X POST localhost:8082/package -H 'Content-Type: application/json' -d '{"sender": "Ilya", "receiver": "Ilya"}'
 ```
 
 
 ### Получить информацию о посылке
 ```shell
-curl localhost:8080/package/1
+curl localhost:8082/package/1
 ```
 
 ## Consul
