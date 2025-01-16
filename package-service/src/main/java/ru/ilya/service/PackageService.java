@@ -1,7 +1,9 @@
 package ru.ilya.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClient;
 import ru.ilya.api.PackageDto;
 import ru.ilya.dao.PackageDao;
 import ru.ilya.model.Package;
@@ -9,15 +11,15 @@ import ru.ilya.model.Package;
 @Service
 public class PackageService {
   private final PackageDao packageDao;
+  private final RestClient userServiceClient;
 
   public PackageService(PackageDao packageDao) {
     this.packageDao = packageDao;
+    this.userServiceClient = RestClient.builder().baseUrl("http://localhost:8080/user").build();
   }
 
   public Long send(PackageDto packageDto) {
-//    TODO: Как-то теперь надо проверить пользователей
-//    List<String> undefinedUsers = getUndefinedUsers(packageDto.sender(), packageDto.receiver());
-    List<String> undefinedUsers = List.of();
+    List<String> undefinedUsers = getUndefinedUsers(packageDto.sender(), packageDto.receiver());
     if (!undefinedUsers.isEmpty()) {
       throw new IllegalArgumentException("Неизвестные пользователи: %s".formatted(undefinedUsers));
     }
@@ -32,7 +34,14 @@ public class PackageService {
     return packageDao.findById(id).map(pack -> new PackageDto(id, pack.getSender(), pack.getReceiver())).orElse(null);
   }
 
-//  private List<String> getUndefinedUsers(String... names) {
-//    return Arrays.stream(names).filter(name -> !userService.exists(name)).collect(Collectors.toList());
-//  }
+  private List<String> getUndefinedUsers(String... names) {
+    ArrayList<String> undefinedUsers = new ArrayList<>();
+    for (String name : names) {
+      Boolean exists = userServiceClient.get().uri("/exists/{name}", name).retrieve().body(Boolean.class);
+      if (Boolean.FALSE.equals(exists)) {
+        undefinedUsers.add(name);
+      }
+    }
+    return undefinedUsers;
+  }
 }
