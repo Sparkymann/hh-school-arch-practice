@@ -9,6 +9,7 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriBuilder;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RestController;
 import ru.ilya.api.UserDto;
 import ru.ilya.service.UserService;
@@ -17,6 +18,8 @@ import ru.ilya.service.UserService;
 @RestController
 public class UserResource {
   private final UserService userService;
+  @Value("${spring.cloud.consul.discovery.instance-id}")
+  private String instanceId;
 
   public UserResource(UserService userService) {
     this.userService = userService;
@@ -47,6 +50,10 @@ public class UserResource {
   @Path("/exists/{name}")
   @Produces(MediaType.APPLICATION_JSON)
   public Response exists(@PathParam("name") String name) {
-    return Response.status(Response.Status.OK).entity(userService.exists(name)).build();
+    return Response
+        .status(Response.Status.OK)
+        .header("X-Instance-Id", instanceId)
+        .entity(userService.exists(name))
+        .build();
   }
 }

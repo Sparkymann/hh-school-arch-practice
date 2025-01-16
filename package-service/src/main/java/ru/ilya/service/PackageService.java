@@ -2,6 +2,9 @@ package ru.ilya.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 import ru.ilya.api.PackageDto;
@@ -10,6 +13,7 @@ import ru.ilya.model.Package;
 
 @Service
 public class PackageService {
+  private static final Logger LOGGER = LoggerFactory.getLogger(PackageService.class);
   private final PackageDao packageDao;
   private final RestClient.Builder clientBuilder;
 
@@ -38,7 +42,9 @@ public class PackageService {
     ArrayList<String> undefinedUsers = new ArrayList<>();
     RestClient userServiceClient = clientBuilder.baseUrl("http://user-service/user").build();
     for (String name : names) {
-      Boolean exists = userServiceClient.get().uri("/exists/{name}", name).retrieve().body(Boolean.class);
+      ResponseEntity<Boolean> entity = userServiceClient.get().uri("/exists/{name}", name).retrieve().toEntity(Boolean.class);
+      LOGGER.info("User service instance id: {}", entity.getHeaders().get("X-Instance-Id"));
+      Boolean exists = entity.getBody();
       if (Boolean.FALSE.equals(exists)) {
         undefinedUsers.add(name);
       }
