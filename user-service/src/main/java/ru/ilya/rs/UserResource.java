@@ -42,4 +42,11 @@ public class UserResource {
     }
     return Response.status(Response.Status.OK).entity(userDto).build();
   }
+
+  @GET
+  @Path("/exists/{name}")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response exists(@PathParam("name") String name) {
+    return Response.status(Response.Status.OK).entity(userService.exists(name)).build();
+  }
 }
