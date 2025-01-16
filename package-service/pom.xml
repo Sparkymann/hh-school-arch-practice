@@ -11,7 +11,7 @@
     </parent>
 
     <groupId>ru.i1y4</groupId>
-    <artifactId>monolith</artifactId>
+    <artifactId>package-service</artifactId>
     <version>1.0.0-SNAPSHOT</version>
 
     <dependencies>
@@ -36,7 +36,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>ru.ilya.MonolithApp</mainClass>
+                    <mainClass>ru.ilya.PackageApp</mainClass>
                 </configuration>
             </plugin>
         </plugins>
