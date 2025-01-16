@@ -6,19 +6,13 @@
 ### user-service
 Отвечает за создание и получение информации о пользователях
 
-#### Запуск
-
-```bash
-./run.sh user-service 8080
-```
-
 ### package-service
 Отвечает за отправку посылок и их валидацию
 
-#### Запуск
+## Запуск
 
 ```bash
-./run.sh package-service 8081
+./run.sh
 ```
 
 ## Использование
@@ -42,5 +36,12 @@ curl -X POST localhost:8081/package -H 'Content-Type: application/json' -d '{"se
 ### Получить информацию о посылке
 ```shell
 curl localhost:8081/package/1
+```
+
+## Consul
+
+### Получить информацию о сервисе
+```shell
+curl localhost:8500/v1/catalog/service/user-service | jq
 ```
 

@@ -1,11 +1,15 @@
 #! /bin/bash
 
-mvn -f $1 clean install
+us=user-service
+ps=package-service
+mvn -f $us clean install
+mvn -f $ps clean install
 
-id=$(docker build -q --build-arg JAR_PATH=$1/target -f Dockerfile .)
+docker compose up
+docker compose rm -fsv
+mvn clean -f $us
+mvn clean -f $ps
 
-mvn clean -f $1
-
-docker run --rm --name $1 -p $2:8080 $id
-
-docker image rm $id
+prefix=hh-school-arch-practice
+docker image rm $prefix-$us
+docker image rm $prefix-$ps
