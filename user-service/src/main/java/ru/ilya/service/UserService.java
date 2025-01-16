@@ -23,6 +23,7 @@ public class UserService {
   public UserDto getUserById(Long id) {
     return userDao.findById(id).map(user -> new UserDto(id, user.getName())).orElse(null);
   }
+
   public boolean exists(String name) {
     return userDao.existsByName(name);
   }
