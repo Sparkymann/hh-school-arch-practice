@@ -14,6 +14,8 @@ public class Package {
   private String sender;
   @Column
   private String receiver;
+  @Column
+  private PackageStatus status;
 
   public void setId(Long id) {
     this.id = id;
@@ -37,5 +39,13 @@ public class Package {
 
   public void setReceiver(String receiver) {
     this.receiver = receiver;
+  }
+
+  public PackageStatus getStatus() {
+    return status;
+  }
+
+  public void setStatus(PackageStatus status) {
+    this.status = status;
   }
 }
