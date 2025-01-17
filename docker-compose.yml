@@ -32,17 +32,6 @@ services:
         JAR_PATH: package-service/target
     ports:
       - "8082:8080"
-  package-service-2:
-    depends_on:
-      - consul
-    environment:
-      INSTANCE_ID: package-service-2
-    build:
-      context: .
-      args:
-        JAR_PATH: package-service/target
-    ports:
-      - "8083:8080"
   consul:
     image: bitnami/consul
     ports:

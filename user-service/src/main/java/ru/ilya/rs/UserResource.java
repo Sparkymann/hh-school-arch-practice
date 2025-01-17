@@ -9,6 +9,8 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RestController;
 import ru.ilya.api.UserDto;
@@ -17,6 +19,7 @@ import ru.ilya.service.UserService;
 @Path("/user")
 @RestController
 public class UserResource {
+  private final static Logger LOGGER = LoggerFactory.getLogger(UserResource.class);
   private final UserService userService;
   @Value("${spring.cloud.consul.discovery.instance-id}")
   private String instanceId;
@@ -49,7 +52,19 @@ public class UserResource {
   @GET
   @Path("/exists/{name}")
   @Produces(MediaType.APPLICATION_JSON)
-  public Response exists(@PathParam("name") String name) {
+  public Response exists(@PathParam("name") String name) throws InterruptedException {
+    // Второй инстанс будет "помедленнее" чем первый
+    if ("Slow".equals(name) && instanceId.contains("2")) {
+      LOGGER.warn("slow user, засыпаем");
+      Thread.sleep(500);
+    }
+    if ("Error".equals(name)) {
+      LOGGER.warn("error user");
+      return Response
+          .status(Response.Status.INTERNAL_SERVER_ERROR)
+          .header("X-Instance-Id", instanceId)
+          .build();
+    }
     return Response
         .status(Response.Status.OK)
         .header("X-Instance-Id", instanceId)
