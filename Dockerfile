@@ -1,4 +1,4 @@
-FROM openjdk:17.0.2
+FROM eclipse-temurin:17
 LABEL authors="isafonov"
 ARG JAR_PATH
 

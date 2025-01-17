@@ -28,7 +28,7 @@ public class PackageResource {
     if (packageDto.id() != null) {
       return Response.status(Response.Status.BAD_REQUEST).entity("Не надо передавать id при создании").build();
     }
-    Long id = packageService.send(packageDto);
+    Long id = packageService.accept(packageDto);
     return Response.status(Response.Status.CREATED).contentLocation(UriBuilder.fromMethod(PackageResource.class, "getPackage").build(id)).build();
   }
 
