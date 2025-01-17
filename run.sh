@@ -14,4 +14,3 @@ prefix=hh-school-arch-practice
 docker image rm $prefix-$us-1
 docker image rm $prefix-$us-2
 docker image rm $prefix-$ps-1
-docker image rm $prefix-$ps-2
