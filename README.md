@@ -19,22 +19,29 @@
 
 ### Создать пользователя
 ```shell
-curl -X POST localhost:8080/user -H 'Content-Type: application/json' -d '{"name": "Ilya"}'
+curl -X POST localhost:8081/user -H 'Content-Type: application/json' -d '{"name": "Ilya"}'
 ```
 
 ### Получить информацию о пользователе
 ```shell
-curl localhost:8080/user/1
+curl localhost:8081/user/1
 ```
 
 ### Отправить посылку
 ```shell
-curl -X POST localhost:8081/package -H 'Content-Type: application/json' -d '{"sender": "Ilya", "receiver": "Ilya"}'
+curl -X POST localhost:8080/package -H 'Content-Type: application/json' -d '{"sender": "Ilya", "receiver": "Ilya"}'
 ```
 
 
 ### Получить информацию о посылке
 ```shell
-curl localhost:8081/package/1
+curl localhost:8080/package/1
+```
+
+## Consul
+
+### Получить информацию о сервисе
+```shell
+curl localhost:8500/v1/catalog/service/user-service | jq
 ```
 
