@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+option java_package = "ru.ilya.grpc.gen";
+option java_outer_classname = "PackageProto";
+option java_multiple_files = true;
+
+service PackageService {
+  rpc SendPackage (SendPackageRequest) returns (SendPackageResponse);
+  rpc GetPackage (GetPackageRequest) returns (GetPackageResponse);
+}
+
+message SendPackageRequest {
+  string sender = 1;
+  string receiver = 2;
+}
+
+message SendPackageResponse {
+  int64 id = 1;
+}
+
+message GetPackageRequest {
+  int64 id = 1;
+}
+
+message GetPackageResponse {
+  bool found = 1;
+  int64 id = 2;
+  string sender = 3;
+  string receiver = 4;
+}

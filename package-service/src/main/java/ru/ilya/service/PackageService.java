@@ -1,23 +1,28 @@
 package ru.ilya.service;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import ru.ilya.api.PackageDto;
 import ru.ilya.dao.PackageDao;
+import ru.ilya.grpc.gen.ExistsUserRequest;
+import ru.ilya.grpc.gen.UserServiceGrpc;
 import ru.ilya.model.Package;
 
 @Service
 public class PackageService {
-  private final PackageDao packageDao;
 
-  public PackageService(PackageDao packageDao) {
+  private final PackageDao packageDao;
+  private final UserServiceGrpc.UserServiceBlockingStub userServiceStub;
+
+  public PackageService(PackageDao packageDao, UserServiceGrpc.UserServiceBlockingStub userServiceStub) {
     this.packageDao = packageDao;
+    this.userServiceStub = userServiceStub;
   }
 
   public Long send(PackageDto packageDto) {
-//    TODO: Как-то теперь надо проверить пользователей
-//    List<String> undefinedUsers = getUndefinedUsers(packageDto.sender(), packageDto.receiver());
-    List<String> undefinedUsers = List.of();
+    List<String> undefinedUsers = getUndefinedUsers(packageDto.sender(), packageDto.receiver());
     if (!undefinedUsers.isEmpty()) {
       throw new IllegalArgumentException("Неизвестные пользователи: %s".formatted(undefinedUsers));
     }
@@ -32,7 +37,9 @@ public class PackageService {
     return packageDao.findById(id).map(pack -> new PackageDto(id, pack.getSender(), pack.getReceiver())).orElse(null);
   }
 
-//  private List<String> getUndefinedUsers(String... names) {
-//    return Arrays.stream(names).filter(name -> !userService.exists(name)).collect(Collectors.toList());
-//  }
+  private List<String> getUndefinedUsers(String... names) {
+    return Arrays.stream(names)
+        .filter(name -> !userServiceStub.existsUser(ExistsUserRequest.newBuilder().setName(name).build()).getExists())
+        .collect(Collectors.toList());
+  }
 }

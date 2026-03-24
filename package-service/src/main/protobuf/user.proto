@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+option java_package = "ru.ilya.grpc.gen";
+option java_outer_classname = "UserProto";
+option java_multiple_files = true;
+
+service UserService {
+  rpc CreateUser (CreateUserRequest) returns (CreateUserResponse);
+  rpc GetUser (GetUserRequest) returns (GetUserResponse);
+  rpc ExistsUser (ExistsUserRequest) returns (ExistsUserResponse);
+}
+
+message CreateUserRequest {
+  string name = 1;
+}
+
+message CreateUserResponse {
+  int64 id = 1;
+}
+
+message GetUserRequest {
+  int64 id = 1;
+}
+
+message GetUserResponse {
+  bool found = 1;
+  int64 id = 2;
+  string name = 3;
+}
+
+message ExistsUserRequest {
+  string name = 1;
+}
+
+message ExistsUserResponse {
+  bool exists = 1;
+}
